@@ -47,7 +47,7 @@ withSecondaryIconTooltip.args = {
 	item: {
 		id: 'workflows',
 		icon: 'heart',
-		label: 'Workflows',
+		label: 'deneme',
 		secondaryIcon: {
 			name: 'lock',
 			size: 'small',
