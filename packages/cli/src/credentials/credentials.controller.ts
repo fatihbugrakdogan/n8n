@@ -91,7 +91,7 @@ credentialsController.get(
 			await CredentialsService.decrypt(key, credential),
 			credential,
 		);
-
+		console.log(decryptedData,'tokens',rest);
 		return { data: decryptedData, ...rest };
 	}),
 );
