@@ -49,13 +49,10 @@ async function createApiRouter(
 			}),
 		);
 	}
-	apiController.get('/healtz', (req, res) => {
-		res.sendStatus(200);
-	});
+	
 	apiController.get(`/${publicApiEndpoint}/${version}/openapi.yml`, (req, res) => {
 		res.sendFile(openApiSpecPath);
 	});
-
 	const { middleware: openApiValidatorMiddleware } = await import('express-openapi-validator');
 	apiController.use(
 		`/${publicApiEndpoint}/${version}`,
