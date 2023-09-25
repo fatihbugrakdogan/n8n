@@ -1,39 +1,21 @@
-ARG NODE_VERSION=18
+FROM node:12.13.0-alpine
 
-# 1. Create an image to build n8n
-FROM n8nio/base:${NODE_VERSION} as builder
+ARG N8N_VERSION
 
-COPY --chown=node:node turbo.json package.json .npmrc pnpm-lock.yaml pnpm-workspace.yaml jest.config.js tsconfig*.json ./
-COPY --chown=node:node scripts ./scripts
-COPY --chown=node:node packages ./packages
-COPY --chown=node:node patches ./patches
+RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
 
-RUN apk add --update jq
-RUN corepack enable && corepack prepare --activate
-USER node
+# Update everything and install needed dependencies
+RUN apk add --update graphicsmagick tzdata
 
-RUN pnpm install --frozen-lockfile
-RUN pnpm build
-RUN rm -rf node_modules
-RUN jq 'del(.pnpm.patchedDependencies)' package.json > package.json.tmp; mv package.json.tmp package.json
-RUN node scripts/trim-fe-packageJson.js
-RUN NODE_ENV=production pnpm install --prod --no-optional
-RUN find . -type f -name "*.ts" -o -name "*.js.map" -o -name "*.vue" -o -name "tsconfig.json" -o -name "*.tsbuildinfo" | xargs rm -rf
-RUN rm -rf packages/@n8n_io/eslint-config packages/editor-ui/src packages/editor-ui/node_modules packages/design-system
-RUN rm -rf patches .npmrc *.yaml node_modules/.cache packages/**/node_modules/.cache packages/**/.turbo .config .cache .local .node /tmp/*
+# # Set a custom user to not have n8n run as root
+USER root
 
+# Install n8n and the also temporary all the packages
+# it needs to build it correctly.
+RUN apk --update add --virtual build-dependencies python build-base ca-certificates && \
+	npm_config_user=root npm install -g n8n@${N8N_VERSION} && \
+	apk del build-dependencies
 
-# 2. Start with a new clean image with just the code that is needed to run n8n
-FROM n8nio/base:${NODE_VERSION}
-COPY --from=builder /home/node /usr/local/lib/node_modules/n8n
-RUN ln -s /usr/local/lib/node_modules/n8n/packages/cli/bin/n8n /usr/local/bin/n8n
+WORKDIR /data
 
-COPY docker/images/n8n/docker-entrypoint.sh /
-
-RUN \
-	mkdir .n8n && \
-	chown node:node .n8n
-USER node
-ENV NODE_ENV=production
-ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
-CMD ["n8n start"]
+CMD ["n8n"]
