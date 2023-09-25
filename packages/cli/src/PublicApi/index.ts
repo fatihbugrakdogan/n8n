@@ -49,7 +49,9 @@ async function createApiRouter(
 			}),
 		);
 	}
-
+	apiController.get('/healtz', (req, res) => {
+		res.sendStatus(200);
+	});
 	apiController.get(`/${publicApiEndpoint}/${version}/openapi.yml`, (req, res) => {
 		res.sendFile(openApiSpecPath);
 	});
