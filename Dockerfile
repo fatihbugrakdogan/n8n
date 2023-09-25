@@ -36,3 +36,4 @@ RUN \
 USER node
 ENV NODE_ENV=production
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
+CMD ["n8n start"]
