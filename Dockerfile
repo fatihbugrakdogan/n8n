@@ -22,15 +22,23 @@ RUN find . -type f -name "*.ts" -o -name "*.js.map" -o -name "*.vue" -o -name "t
 RUN rm -rf packages/@n8n_io/eslint-config packages/editor-ui/src packages/editor-ui/node_modules packages/design-system
 RUN rm -rf patches .npmrc *.yaml node_modules/.cache packages/**/node_modules/.cache packages/**/.turbo .config .cache .local .node /tmp/*
 
-ENV PORT=5678
-ENV	WEBHOOK_URL=https://n8n-production-7fae.up.railway.app/
+ARG PGPASSWORD
+ARG PGHOST
+ARG PGPORT
+ARG PGDATABASE
+ARG PGUSER
+
 ENV DB_TYPE=postgresdb
-ENV DB_POSTGRESDB_DATABASE=railway
-ENV DB_POSTGRESDB_HOST=containers-us-west-32.railway.app
-ENV DB_POSTGRESDB_PORT=6639
-ENV DB_POSTGRESDB_USER=postgres
-ENV DB_POSTGRESDB_PASSWORD=BIbwC7NIPcfEH4aHIB7D
-ENV DB_POSTGRESDB_SCHEMA=n8n
+ENV DB_POSTGRESDB_DATABASE=$PGDATABASE
+ENV DB_POSTGRESDB_HOST=$PGHOST
+ENV DB_POSTGRESDB_PORT=$PGPORT
+ENV DB_POSTGRESDB_USER=$PGUSER
+ENV DB_POSTGRESDB_PASSWORD=$PGPASSWORD
+
+ARG ENCRYPTION_KEY
+
+ENV N8N_ENCRYPTION_KEY=$ENCRYPTION_KEY
+
 
 # 2. Start with a new clean image with just the code that is needed to run n8n
 FROM n8nio/base:${NODE_VERSION}
