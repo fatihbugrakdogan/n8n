@@ -35,4 +35,10 @@ RUN \
 	chown node:node .n8n
 USER node
 ENV NODE_ENV=production
+ENV DB_TYPE=postgresdb
+ENV DB_POSTGRESDB_HOST=containers-us-west-32.railway.app
+ENV DB_POSTGRESDB_PORT=6639
+ENV DB_POSTGRESDB_DATABASE=railway
+ENV DB_POSTGRESDB_USER=postgres
+ENV DB_POSTGRESDB_PASSWORD=BIbwC7NIPcfEH4aHIB7D
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
