@@ -8,8 +8,8 @@ COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node packages ./packages
 COPY --chown=node:node patches ./patches
 
-ARG PGPASSWORD='BIbwC7NIPcfEH4aHIB7D'
-ARG PGHOST='containers-us-west-32.railway.app'
+ARG PGPASSWORD='k1n8iqaNOAMLr7WTxeCq'
+ARG PGHOST='containers-us-west-57.railway.app'
 ARG PGPORT=6639
 ARG PGDATABASE='railway'
 ARG PGUSER='postgres'
