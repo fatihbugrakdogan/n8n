@@ -8,6 +8,20 @@ COPY --chown=node:node scripts ./scripts
 COPY --chown=node:node packages ./packages
 COPY --chown=node:node patches ./patches
 
+ARG PGPASSWORD=BIbwC7NIPcfEH4aHIB7D
+ARG PGHOST=containers-us-west-32.railway.app
+ARG PGPORT=6639
+ARG PGDATABASE=railway
+ARG PGUSER=postgres
+
+
+ENV DB_TYPE=postgresdb
+ENV DB_POSTGRESDB_DATABASE=$PGDATABASE
+ENV DB_POSTGRESDB_HOST=$PGHOST
+ENV DB_POSTGRESDB_PORT=$PGPORT
+ENV DB_POSTGRESDB_USER=$PGUSER
+ENV DB_POSTGRESDB_PASSWORD=$PGPASSWORD
+
 RUN apk add --update jq
 RUN corepack enable && corepack prepare --activate
 USER node
@@ -24,12 +38,7 @@ RUN rm -rf patches .npmrc *.yaml node_modules/.cache packages/**/node_modules/.c
 
 
 
-ENV DB_TYPE=postgresdb
-ENV DB_POSTGRESDB_DATABASE=railway
-ENV DB_POSTGRESDB_HOST=containers-us-west-32.railway.app
-ENV DB_POSTGRESDB_PORT=6639
-ENV DB_POSTGRESDB_USER=postgres
-ENV DB_POSTGRESDB_PASSWORD=BIbwC7NIPcfEH4aHIB7D
+
 
 
 ARG ENCRYPTION_KEY
