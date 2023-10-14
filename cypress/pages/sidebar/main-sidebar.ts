@@ -8,7 +8,6 @@ export class MainSidebar extends BasePage {
 		menuItem: (menuLabel: string) =>
 			cy.getByTestId('menu-item').filter(`:contains("${menuLabel}")`),
 		settings: () => this.getters.menuItem('Settings'),
-		templates: () => this.getters.menuItem('Templates'),
 		workflows: () => this.getters.menuItem('Workflows'),
 		credentials: () => this.getters.menuItem('Credentials'),
 		executions: () => this.getters.menuItem('Executions'),
